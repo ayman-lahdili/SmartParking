@@ -5,6 +5,9 @@ import java.util.*;
 public class Dijkstra {
     
     public static void main(String[] args) {
+
+       	
+    	
         // Create the graph
         Map<String, Node> graph = new HashMap<>();
         Node a = new Node("A");
@@ -12,8 +15,10 @@ public class Dijkstra {
         Node c = new Node("C");
         Node d = new Node("D");
         Node e = new Node("E");
-        Parking p1 = new Parking("P1", 50, 40, 12);
+        Parking p1 = new Parking("P1", 50, 40, 2);
         Parking p2 = new Parking("P2", 50, 40, 12);
+        Parking p3 = new Parking("P3", 50, 50, 2);
+        Parking p4 = new Parking("P4", 50, 48, 1);
         
         
         graph.put(a.id, a);
@@ -23,6 +28,8 @@ public class Dijkstra {
         graph.put(e.id, e);
         graph.put(p1.id, p1);
         graph.put(p2.id, p2);
+        graph.put(p3.id, p3);
+        graph.put(p4.id, p4);
         a.addEdge(b, 4);
         a.addEdge(c, 2);
         b.addEdge(c, 1);
@@ -32,29 +39,48 @@ public class Dijkstra {
         d.addEdge(e, 2);
         d.addEdge(p1, 3);
         a.addEdge(p2, 4);
+        c.addEdge(p3, 1);
+        c.addEdge(p4, 3);
+        
         
         // Run Dijkstra's algorithm starting from node 
         Node startNode = c;
+
+        ArrayList<Node> shortestPathsToParking = new ArrayList<>();
+        dijkstra(startNode, graph, shortestPathsToParking);
         
-        dijkstra(startNode, graph);
-        
-        // Print the shortest paths
-        for (Node node : graph.values()) {
-            System.out.println("Shortest path from "+ startNode.id +" to " + node.id + ": " + node.minDistance);
+        int shortestPath=Integer.MAX_VALUE;
+        Node closestParking = null;
+        for (Node node : shortestPathsToParking) {
+        	
+        	if(node.minDistance<shortestPath) {
+        		shortestPath=node.minDistance;
+        		closestParking=node;
+        	}
         }
         
+        System.out.println("Shortest path to " + closestParking.id + ": " + shortestPath);
+
+
         
-        
-        for (Node node : graph.values()) {
+    for (Node node : graph.values()) {
             if (node instanceof Parking) {
             	System.out.println("Parking");
                 System.out.println("Shortest path from "+ startNode.id +" to " + node.id + ": " + node.minDistance);
             }
         }
+  
+    
     }
     
-    public static void dijkstra(Node start, Map<String, Node> graph) {
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+    public static void dijkstra(Node start, Map<String, Node> graph, ArrayList<Node> shortestPathsToParking) {
+    	Scanner scan = new Scanner(System.in);
+    	
+    	int searchAggressiveness;
+    	System.out.println("safe(0), aggressive(1), very aggressive(2)");
+    	searchAggressiveness=scan.nextInt();  
+    	
+    	PriorityQueue<Node> pq = new PriorityQueue<>();
         start.minDistance = 0;
         pq.offer(start);
         while (!pq.isEmpty()) {
@@ -68,6 +94,24 @@ public class Dijkstra {
                     neighbor.previous = node;
                     pq.offer(neighbor);
                 }
+                if (neighbor instanceof Parking) {
+                    Parking parking = (Parking) neighbor;
+                    
+                    	int score = parking.occupancy+parking.flux;
+                    	if(searchAggressiveness == 0) {
+                    	if (score < parking.capacity) {
+                        	System.out.println(parking.occupancy);
+                        	shortestPathsToParking.add(parking);
+                    	} 
+                    } else if (searchAggressiveness == 1) {
+                		if(parking.occupancy<(double)parking.capacity*0.95) {
+                			shortestPathsToParking.add(parking);
+                		}
+                	} else {
+                		shortestPathsToParking.add(parking);
+                	}
+                }
+                
             }
         }
     }
@@ -106,6 +150,11 @@ public class Dijkstra {
             this.occupancy = occupancy;
             this.flux = flux;
         }
+        
+        @Override
+        public String toString() {
+            return "Parking " + id + ": capacity=" + capacity + ", occupancy=" + occupancy + ", flux=" + flux;
+        }
     	
     }
     
@@ -118,5 +167,8 @@ public class Dijkstra {
             this.weight = weight;
         }
     }
+
+    
+    
     
 }
