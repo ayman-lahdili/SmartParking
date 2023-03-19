@@ -38,17 +38,17 @@ public class Dijkstra {
 		graph.put(p2.id, p2);
 		graph.put(p3.id, p3);
 		graph.put(p4.id, p4);
-		a.addEdge(b, 4);
-		a.addEdge(c, 2);
-		b.addEdge(c, 1);
-		b.addEdge(d, 5);
-		c.addEdge(d, 8);
-		c.addEdge(e, 10);
-		d.addEdge(e, 2);
-		d.addEdge(p1, 3);
-		a.addEdge(p2, 4);
-		c.addEdge(p3, 1);
-		c.addEdge(p4, 3);
+		a.addEdge(b, 4,50);
+		a.addEdge(c, 2,50);
+		b.addEdge(c, 1,50);
+		b.addEdge(d, 5,50);
+		c.addEdge(d, 8,50);
+		c.addEdge(e, 10,50);
+		d.addEdge(e, 2,50);
+		d.addEdge(p1, 3,50);
+		a.addEdge(p2, 4,50);
+		c.addEdge(p3, 1,50);
+		c.addEdge(p4, 3,50);
 
 		// Run Dijkstra's algorithm starting from node
 		Node startNode = c;
@@ -56,7 +56,7 @@ public class Dijkstra {
 		ArrayList<Node> shortestPathsToParking = new ArrayList<>();
 		dijkstra(startNode, graph, shortestPathsToParking, searchAggressiveness);
 
-		int shortestPath = Integer.MAX_VALUE;
+		double shortestPath = Integer.MAX_VALUE;
 		Node closestParking = null;
 
 		for (Node node : shortestPathsToParking) {
@@ -100,7 +100,7 @@ public class Dijkstra {
 			Node node = pq.poll();
 			for (Edge edge : node.edges) {
 				Node neighbor = edge.to;
-				int distance = node.minDistance + edge.weight;
+				double distance = node.minDistance + edge.weight;
 				if (distance < neighbor.minDistance) {
 					pq.remove(neighbor);
 					neighbor.minDistance = distance;
@@ -133,7 +133,7 @@ public class Dijkstra {
 	public static class Node implements Comparable<Node> {
 		public final String id;
 		public List<Edge> edges;
-		public int minDistance;
+		public double minDistance;
 		public Node previous;
 
 		public Node(String id) {
@@ -142,13 +142,13 @@ public class Dijkstra {
 			this.minDistance = Integer.MAX_VALUE;
 		}
 
-		public void addEdge(Node to, int weight) {
-			edges.add(new Edge(to, weight));
-			to.edges.add(new Edge(this, weight)); // add edge in both directions
+		public void addEdge(Node to, int distance, int speed) {
+			edges.add(new Edge(to, distance, speed));
+			to.edges.add(new Edge(this, distance, speed)); // add edge in both directions
 		}
 
 		public int compareTo(Node other) {
-			return Integer.compare(minDistance, other.minDistance);
+			return Double.compare(minDistance, other.minDistance);
 		}
 	}
 
@@ -173,11 +173,11 @@ public class Dijkstra {
 
 	public static class Edge {
 		public final Node to;
-		public final int weight;
+		public final double weight;
 
-		public Edge(Node to, int weight) {
+		public Edge(Node to, int distance, double speed) {
 			this.to = to;
-			this.weight = weight;
+			this.weight = distance/speed*60.0;
 		}
 	}
 
