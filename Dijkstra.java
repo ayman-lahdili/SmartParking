@@ -5,8 +5,9 @@ public class Dijkstra {
 
 	public Node start;
 	public Map<String, Node> graph = new HashMap<>();
+	public int searchAggressiveness;
 
-	public Dijkstra () {
+	public Dijkstra (String start_id, int searchAggressiveness) {
 		//Initiate the graph
 		Node a = new Node("A");
 		Node b = new Node("B");
@@ -38,11 +39,17 @@ public class Dijkstra {
 		c.addEdge(p3, 1,50);
 		c.addEdge(p4, 3,50);
 
-		this.graph = graph;
-		this.start = c;
+		for (Node node : graph.values()) {
+			if (node.id.equals(start_id)) {
+				this.start = node;
+				break;
+			}
+		}
+
+		this.searchAggressiveness = searchAggressiveness;
 	}
 
-	public void getShortestPathsToParking (int searchAggressiveness) {
+	public void getShortestPathsToParking () {
 		ArrayList<Node> shortestPathsToParking  = new ArrayList<>();
 		
 		PriorityQueue<Node> pq = new PriorityQueue<>();
@@ -97,7 +104,8 @@ public class Dijkstra {
 		try {
 			System.out.println("Closest parking is " + closestParking.id + ": " + shortestPath);
 		} catch (NullPointerException e1) {
-			getShortestPathsToParking(2);
+			searchAggressiveness = 2;
+			getShortestPathsToParking();
 			for (Node node : shortestPathsToParking) {
 				if (node.minDistance < shortestPath) {
 					shortestPath = node.minDistance;
@@ -120,16 +128,12 @@ public class Dijkstra {
 		// return shortestPathsToParking;
 	}
 
-
-
-
-
-
-
-
 	public static void main(String[] args) {
-		Dijkstra algo = new Dijkstra();
-		algo.getShortestPathsToParking(0);
+		Dijkstra test1 = new Dijkstra("C", 0);
+		test1.getShortestPathsToParking();
+
+		Dijkstra test2 = new Dijkstra("A", 0);
+		test2.getShortestPathsToParking();
 
 
 
