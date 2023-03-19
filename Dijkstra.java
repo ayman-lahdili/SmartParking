@@ -3,20 +3,11 @@ import java.lang.NullPointerException;
 
 public class Dijkstra {
 
-	public static void main(String[] args) {
+	public Node start;
+	public Map<String, Node> graph = new HashMap<>();
 
-		Scanner scan = new Scanner(System.in);
-
-		int searchAggressiveness;
-		System.out.println("safe(0), aggressive(1), very aggressive(2)");
-		searchAggressiveness = scan.nextInt();
-		while (searchAggressiveness != 0 && searchAggressiveness != 1 && searchAggressiveness != 2) {
-			System.out.println("Please enter a correct input: safe(0), aggressive(1), very aggressive(2)");
-			searchAggressiveness = scan.nextInt();
-		}
-
-		// Create the graph
-		Map<String, Node> graph = new HashMap<>();
+	public Dijkstra () {
+		//Initiate the graph
 		Node a = new Node("A");
 		Node b = new Node("B");
 		Node c = new Node("C");
@@ -26,7 +17,6 @@ public class Dijkstra {
 		Parking p2 = new Parking("P2", 50, 50, -12);
 		Parking p3 = new Parking("P3", 50, 50, 2);
 		Parking p4 = new Parking("P4", 50, 50, 1);
-
 		graph.put(a.id, a);
 		graph.put(b.id, b);
 		graph.put(c.id, c);
@@ -48,12 +38,51 @@ public class Dijkstra {
 		c.addEdge(p3, 1,50);
 		c.addEdge(p4, 3,50);
 
-		// Run Dijkstra's algorithm starting from node
-		Node startNode = c;
+		this.graph = graph;
+		this.start = c;
+	}
 
-		ArrayList<Node> shortestPathsToParking = new ArrayList<>();
-		dijkstra(startNode, graph, shortestPathsToParking, searchAggressiveness);
+	public void getShortestPathsToParking (int searchAggressiveness) {
+		ArrayList<Node> shortestPathsToParking  = new ArrayList<>();
+		
+		PriorityQueue<Node> pq = new PriorityQueue<>();
+		start.minDistance = 0;
+		
+		pq.offer(start);
 
+		while (!pq.isEmpty()) {
+			Node node = pq.poll();
+			for (Edge edge : node.edges) {
+				Node neighbor = edge.to;
+				double distance = node.minDistance + edge.weight;
+				if (distance < neighbor.minDistance) {
+					pq.remove(neighbor);
+					neighbor.minDistance = distance;
+					neighbor.previous = node;
+					pq.offer(neighbor);
+				}
+				if (neighbor instanceof Parking) {
+					Parking parking = (Parking) neighbor; //Unecessary?
+
+					int score = parking.occupancy + parking.flux;
+
+					if (searchAggressiveness == 0) {
+						if (score < parking.capacity) {
+							System.out.println(parking.occupancy);	
+							shortestPathsToParking.add(parking);
+						}
+					} else if (searchAggressiveness == 1) {
+						if (parking.occupancy < parking.capacity) {
+							shortestPathsToParking.add(parking);
+						}
+					} else {
+						shortestPathsToParking.add(parking);
+					}
+
+				}
+			}
+		}
+		
 		double shortestPath = Integer.MAX_VALUE;
 		Node closestParking = null;
 
@@ -68,7 +97,7 @@ public class Dijkstra {
 		try {
 			System.out.println("Closest parking is " + closestParking.id + ": " + shortestPath);
 		} catch (NullPointerException e1) {
-			dijkstra(startNode, graph, shortestPathsToParking, 2);
+			getShortestPathsToParking(2);
 			for (Node node : shortestPathsToParking) {
 				if (node.minDistance < shortestPath) {
 					shortestPath = node.minDistance;
@@ -82,101 +111,28 @@ public class Dijkstra {
 		for (Node node : graph.values()) {
 			if (node instanceof Parking) {
 				System.out.println("Parking");
-				System.out.println("Shortest path from " + startNode.id + " to " + node.id + ": " + node.minDistance);
+				System.out.println("Shortest path from " + start.id + " to " + node.id + ": " + node.minDistance);
 			}
 		}
 
+
+
+		// return shortestPathsToParking;
 	}
 
-	public static void dijkstra(Node start, Map<String, Node> graph, ArrayList<Node> shortestPathsToParking,
-			int searchAggressiveness) {
 
-		PriorityQueue<Node> pq = new PriorityQueue<>();
-		start.minDistance = 0;
-		pq.offer(start);
-		while (!pq.isEmpty()) {
-			Node node = pq.poll();
-			for (Edge edge : node.edges) {
-				Node neighbor = edge.to;
-				double distance = node.minDistance + edge.weight;
-				if (distance < neighbor.minDistance) {
-					pq.remove(neighbor);
-					neighbor.minDistance = distance;
-					neighbor.previous = node;
-					pq.offer(neighbor);
-				}
-				if (neighbor instanceof Parking) {
-					Parking parking = (Parking) neighbor;
 
-					int score = parking.occupancy + parking.flux;
 
-					if (searchAggressiveness == 0) {
-						if (score < parking.capacity) {
-							System.out.println(parking.occupancy);
-							shortestPathsToParking.add(parking);
-						}
-					} else if (searchAggressiveness == 1) {
-						if (parking.occupancy < parking.capacity) {
-							shortestPathsToParking.add(parking);
-						}
-					} else {
-						shortestPathsToParking.add(parking);
-					}
 
-				}
-			}
-		}
-	}
 
-	public static class Node implements Comparable<Node> {
-		public final String id;
-		public List<Edge> edges;
-		public double minDistance;
-		public Node previous;
 
-		public Node(String id) {
-			this.id = id;
-			this.edges = new ArrayList<>();
-			this.minDistance = Integer.MAX_VALUE;
-		}
 
-		public void addEdge(Node to, int distance, int speed) {
-			edges.add(new Edge(to, distance, speed));
-			to.edges.add(new Edge(this, distance, speed)); // add edge in both directions
-		}
+	public static void main(String[] args) {
+		Dijkstra algo = new Dijkstra();
+		algo.getShortestPathsToParking(0);
 
-		public int compareTo(Node other) {
-			return Double.compare(minDistance, other.minDistance);
-		}
-	}
 
-	public static class Parking extends Node {
-		public int capacity;
-		public int occupancy;
-		public int flux;
 
-		public Parking(String id, int capacity, int occupancy, int flux) {
-			super(id);
-			this.capacity = capacity;
-			this.occupancy = occupancy;
-			this.flux = flux;
-		}
-
-		@Override
-		public String toString() {
-			return "Parking " + id + ": capacity=" + capacity + ", occupancy=" + occupancy + ", flux=" + flux;
-		}
-
-	}
-
-	public static class Edge {
-		public final Node to;
-		public final double weight;
-
-		public Edge(Node to, int distance, double speed) {
-			this.to = to;
-			this.weight = distance/speed*60.0;
-		}
 	}
 
 }
