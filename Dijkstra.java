@@ -1,5 +1,3 @@
-package dijkstra_test;
-
 import java.util.*;
 import java.lang.NullPointerException;
 
