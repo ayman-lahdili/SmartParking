@@ -32,9 +32,12 @@ public class Dijkstra {
 		b.addEdge(c, 1,50);
 		b.addEdge(d, 5,50);
 		c.addEdge(d, 8,50);
-		c.addEdge(e, 10,50);
+		// c.addEdge(e, 10,50);
 		d.addEdge(e, 2,50);
-		d.addEdge(p1, 3,50);
+		e.addEdge(c, 2,50);
+		c.addEdge(p1, 2,50);
+
+		// e.addEdge(p1, 3,50);
 		a.addEdge(p2, 4,50);
 		c.addEdge(p3, 1,50);
 		c.addEdge(p4, 3,50);
@@ -50,26 +53,41 @@ public class Dijkstra {
 	}
 
 	public void getShortestPathsToParking () {
-		ArrayList<Node> shortestPathsToParking  = new ArrayList<>();
-		
+		ArrayList<Node>	shortestPathsToParking = new ArrayList<>();
+		ArrayList<String> temp = new ArrayList<>();
 		PriorityQueue<Node> pq = new PriorityQueue<>();
-		start.minDistance = 0;
+		Map<String, ArrayList<String>> paths = new HashMap<>();
 		
-		pq.offer(start);
+		// Store the paths to each node in the graph
+		for (String id : graph.keySet()) {
+			paths.put(id, new ArrayList<>());
+		}
 
+		start.minDistance = 0;
+		pq.offer(start);
 		while (!pq.isEmpty()) {
+
+			temp.clear();
 			Node node = pq.poll();
 			for (Edge edge : node.edges) {
-				Node neighbor = edge.to;
-				double distance = node.minDistance + edge.weight;
+				Node 	neighbor = edge.to;
+				double 	distance = node.minDistance + edge.weight;
+
 				if (distance < neighbor.minDistance) {
 					pq.remove(neighbor);
 					neighbor.minDistance = distance;
 					neighbor.previous = node;
 					pq.offer(neighbor);
 				}
+
+				// Add the neighbor's id to the path to the current node
+				ArrayList<String> pathToNeighbor = paths.get(neighbor.id);
+				pathToNeighbor.add(node.id);
+				paths.put(neighbor.id, pathToNeighbor);
+
 				if (neighbor instanceof Parking) {
-					Parking parking = (Parking) neighbor; //Unecessary?
+					Parking parking = (Parking) neighbor;
+					shortestPathsToParking.add(parking);
 
 					int score = parking.occupancy + parking.flux;
 
@@ -88,8 +106,15 @@ public class Dijkstra {
 
 				}
 			}
+
+		}
+
+		// Print the paths to each node
+		for (String id : paths.keySet()) {
+			System.out.println("Paths to " + id + ": " + paths.get(id));
 		}
 		
+
 		double shortestPath = Integer.MAX_VALUE;
 		Node closestParking = null;
 
@@ -100,6 +125,9 @@ public class Dijkstra {
 				closestParking = node;
 			}
 		}
+
+
+
 
 		try {
 			System.out.println("Closest parking is " + closestParking.id + ": " + shortestPath);
@@ -116,26 +144,31 @@ public class Dijkstra {
 			System.out.println("No parkings are available. The closest parking that is full is " + closestParking.id
 					+ " with a distance of " + shortestPath);
 		}
+
+
 		for (Node node : graph.values()) {
 			if (node instanceof Parking) {
 				System.out.println("Parking");
-				System.out.println("Shortest path from " + start.id + " to " + node.id + ": " + node.minDistance);
+				System.out.println("Shortest path from " + start.id + " to " + node.id + ": " + paths.get(node.id));
 			}
 		}
 
+	}
 
+	public double getDistanceShortestPathsToParking() {
+		return 1.0;
+	}
 
-		// return shortestPathsToParking;
+	public ArrayList<String> getDirectionShortestPath() {
+		return new ArrayList<>();
 	}
 
 	public static void main(String[] args) {
-		Dijkstra test1 = new Dijkstra("C", 0);
+		Dijkstra test1 = new Dijkstra("C", 2);
 		test1.getShortestPathsToParking();
 
-		Dijkstra test2 = new Dijkstra("A", 0);
-		test2.getShortestPathsToParking();
-
-
+		// Dijkstra test2 = new Dijkstra("A", 0);
+		// test2.getShortestPathsToParking();
 
 	}
 
