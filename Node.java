@@ -7,6 +7,10 @@ public class Node implements Comparable<Node>{
     public double minDistance;
     public Node previous;
 
+    /**
+     * 
+     * @param id
+     */
     public Node(String id) {
         this.id = id;
         this.edges = new ArrayList<>();
