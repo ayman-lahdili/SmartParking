@@ -12,11 +12,15 @@ public class Parking extends Node {
      * @param occupancy
      * @param flux
      */
-    public Parking(String id, int capacity, int occupancy, int flux) {
+    public Parking(String id, int capacity, int occupancy, int flux) throws IllegalArgumentException {
         super(id);
         this.capacity = capacity;
         this.occupancy = occupancy;
         this.flux = flux;
+
+        if (occupancy<0) {
+            throw new IllegalArgumentException("Occupancy cannot be negative");
+        }
     }
 
     
