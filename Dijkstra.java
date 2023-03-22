@@ -130,7 +130,7 @@ public class Dijkstra {
 	 * 
 	 * @return 
 	 */
-	public double getDistanceBestPath() {
+	public double getTimeBestPath() {
 		return this.minDistanceBestPath;
 	}
 

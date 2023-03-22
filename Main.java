@@ -66,6 +66,6 @@ public class Main {
          */
 		Dijkstra test1 = new Dijkstra(graph, "E", false);
 		System.out.println(test1.getDirectionBestPaths());
-		System.out.println(test1.getDistanceBestPath());
+		System.out.println(test1.getTimeBestPath());
 	}
 }
