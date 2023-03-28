@@ -39,7 +39,6 @@ public class Dijkstra {
 	 */
 	protected void getShortestPathsToParking () {
 		ArrayList<Parking>	shortestPathsToParking = new ArrayList<>();
-		ArrayList<String> temp = new ArrayList<>();
 		PriorityQueue<Node> pq = new PriorityQueue<>();
 		Map<String, ArrayList<String>> paths = new HashMap<>();
 		
@@ -55,7 +54,6 @@ public class Dijkstra {
 		start.minDistance = 0;
 		pq.offer(start);
 		while (!pq.isEmpty()) {
-			temp.clear();
 			Node node = pq.poll();
 
 			for (Edge edge : node.edges) {
@@ -86,10 +84,6 @@ public class Dijkstra {
 			init.add(id);
 			paths.put(id, init);
 		}
-
-
-		System.out.println(paths);
-
 
 		//Add only the parkings to the array that will be processed
 		for (Node node : graph.values()) {
