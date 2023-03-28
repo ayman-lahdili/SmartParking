@@ -46,7 +46,7 @@ public class Dijkstra {
 		// Store the paths to each node in the graph
 		for (String id : graph.keySet()) {
 			ArrayList<String> init = new ArrayList<>();
-			init.add(start.id);
+			// init.add(start.id);
 
 			paths.put(id, init);
 		}
@@ -67,23 +67,29 @@ public class Dijkstra {
 					neighbor.minDistance = distance;
 					neighbor.previous = node;
 					pq.offer(neighbor);
-
-					// Add the neighbor's id to the path to the current node
-					ArrayList<String> pathToNeighbor = paths.get(neighbor.id);
-					pathToNeighbor.add(node.id);
-					paths.put(neighbor.id, pathToNeighbor);
-
 				}
 			}
 		}
-
-		//	Adds the destination at the end of the ArrayList
-		//	To make the processing easier
+		
+		//Generate the paths for each destination
 		for (String id : paths.keySet()) {
+			Node node =  graph.get(id);
+			
 			ArrayList<String> init = paths.get(id);
+
+			Node prev = node.previous;
+			while (prev != null) {
+				init.add(0, prev.id);
+
+				prev = prev.previous;
+			}
 			init.add(id);
 			paths.put(id, init);
 		}
+
+
+		System.out.println(paths);
+
 
 		//Add only the parkings to the array that will be processed
 		for (Node node : graph.values()) {

@@ -17,7 +17,7 @@ public class Main {
 		Node i = new Node("I");
 
 		//Initiate destination parkings
-		Parking p1 = new Parking("P1", 50, 0, 0);
+		Parking p1 = new Parking("P1", 50, 50, 0);
 		Parking p2 = new Parking("P2", 50, 0, 0);
 		Parking p3 = new Parking("P3", 50, 0, 0);
 		Parking p4 = new Parking("P4", 50, 0, 0);
@@ -64,7 +64,7 @@ public class Main {
          * Here the aggressive parameter is set to false
          * The algo will therefore take into account the capacity of the parkings
          */
-		Dijkstra test1 = new Dijkstra(graph, "E", false);
+		Dijkstra test1 = new Dijkstra(graph, "B", false);
 		System.out.println(test1.getDirectionBestPaths());
 		System.out.println(test1.getTimeBestPath());
 	}
