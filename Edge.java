@@ -2,8 +2,8 @@
 
 public class Edge {
 
-    public final Node to;
-    public final double weight;
+    public final Node to;   // La route est crée du node A to node B. to designe B.
+    public final double weight; // Le weight s'agit du temps nécessaire pour conduire la route du début jusqu'à la fin.
 
     /**
      * 
@@ -13,7 +13,7 @@ public class Edge {
      */
     public Edge(Node to, int distance, double speed) {
         this.to = to;
-        this.weight = distance/speed*60.0;
+        this.weight = distance/speed*60.0; // Le temps est calculé avec la distance(km)/vitesse(km/h)*60min/h pour nous donner le temps en minutes.
     }
 
 
