@@ -1,9 +1,11 @@
+/* Afin de différentier un node (position) et un parking, on a crée cette classe, qui extend Node. */
+
 
 public class Parking extends Node {
     
-    public int capacity;
-    public int occupancy;
-    public int flux;
+    public int capacity; // La capacité maximale du parking.
+    public int occupancy;   // Le nombre de voiture dans le parking à un moment donné.
+    public int flux;    // Le flux de voiture qui rentrent dans le parking.
 
     /**
      * 
@@ -19,7 +21,7 @@ public class Parking extends Node {
         this.flux = flux;
 
         if (occupancy<0) {
-            throw new IllegalArgumentException("Occupancy cannot be negative");
+            throw new IllegalArgumentException("Occupancy cannot be negative"); // Si le nombre de voitures est négatif, il y a un erreur.
         }
     }
 
