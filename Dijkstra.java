@@ -13,13 +13,14 @@ public class Dijkstra {
 	 * 
 	 * @param graph
 	 * @param start_id
-	 * @param aggressive
+	 * @param aggressive - deux option, soit aggressive(true), choisir le parking le plus proche sans prendre compte du flux ou de l'occupation (tenter sa chance),
+	 peut-être quelqu'un quittera la seconde que l'utilisateur se rend au parking, ou pas aggressive (false), qui prend en compte le flux afin de déterminer s'il est probable, avec le flux du moment donné, de se rendre au parking avant qu'il se remplisse.
 	 */
 	public Dijkstra (Map<String, Node> graph, String start_id, boolean aggressive) {
 		
 		this.graph = graph;
 
-		//Finds which Node is referenced
+		//Trouver le node de début en référençant le id donné par l'utilisateur.
 		for (Node node : graph.values()) {
 			if (node.id.equals(start_id)) {
 				this.start = node;
@@ -29,7 +30,7 @@ public class Dijkstra {
 
 		this.aggressive = aggressive;
 
-		//Excecute Dijkstra algorithm 
+		//Excecute l'algorithme de Dijkstra.
 		getShortestPathsToParking();
 	}
 
@@ -38,11 +39,11 @@ public class Dijkstra {
 	 * Main algorithm
 	 */
 	protected void getShortestPathsToParking () {
-		ArrayList<Parking>	shortestPathsToParking = new ArrayList<>();
-		PriorityQueue<Node> pq = new PriorityQueue<>();
-		Map<String, ArrayList<String>> paths = new HashMap<>();
+		ArrayList<Parking> shortestPathsToParking = new ArrayList<>(); // Créer un ArrayList qui store les chemins les moins longs pour ce rendre au parking.
+		PriorityQueue<Node> pq = new PriorityQueue<>();	// Initialise un priority queue avec les nodes à considérer.
+		Map<String, ArrayList<String>> paths = new HashMap<>(); // Créer une map pour storer toutes les routes de chaque node. Créer le graphe virtuellement.
 		
-		// Store the paths to each node in the graph
+		// Storer toutes les routes dans le arrayList paths.
 		for (String id : graph.keySet()) {
 			ArrayList<String> init = new ArrayList<>();
 			// init.add(start.id);
@@ -50,11 +51,17 @@ public class Dijkstra {
 			paths.put(id, init);
 		}
 
-		// Main Loop for the algo
+		// Mettre le node de départ dans le primary queue et mettre sa distance à 0. 
 		start.minDistance = 0;
 		pq.offer(start);
 		while (!pq.isEmpty()) {
 			Node node = pq.poll();
+			
+		/* Pour tous les routes liés au node qu'on examine, voir s'il a un chemin pour se rendre plus rapidement à chacun de ses voisins.
+		Par exemple, si A->B = 5, A->D = 1, D->B = 2, l'algorithme va premièrement considérer que se rendre à B prend 5u et se rendre à D prend 1u.
+		Cependant, il se rendra ensuite, dans le primary queue, à analyser D. Il va trouver qu'aller de D à B prend 2u. Il va alors trouver que 2u+1u<5u.
+		Le minDistance pour se rendre à B sera alors changé de 5u à 3u, en passant par D (neigbor.previous).*/
+		
 
 			for (Edge edge : node.edges) {
 				Node 	neighbor = edge.to;
@@ -69,7 +76,7 @@ public class Dijkstra {
 			}
 		}
 		
-		//Generate the paths for each destination
+		// enerer des  chemins pour chaque destination.
 		for (String id : paths.keySet()) {
 			Node node =  graph.get(id);
 			
@@ -85,7 +92,7 @@ public class Dijkstra {
 			paths.put(id, init);
 		}
 
-		//Add only the parkings to the array that will be processed
+		// Seulement considérer les nodes qui sont des parking.
 		for (Node node : graph.values()) {
 			if (node instanceof Parking) {
 				shortestPathsToParking.add((Parking) node);
@@ -95,7 +102,7 @@ public class Dijkstra {
 		// double shortestPath = Integer.MAX_VALUE;
 		Node closestParking = null;
 
-		// Sort in ascending order by taking into account minDistance of each Parking
+		// Comparer les parking par leur distance (temps) pour se rendre et les trier.
 		Collections.sort(shortestPathsToParking, new Comparator<Parking>() {
 			@Override
 			public int compare(Parking node1, Parking node2) {
@@ -103,11 +110,12 @@ public class Dijkstra {
 			}
 		});
 		
-
+		
+		// Si l'algorithme n'est pas mis en mode aggressif, filtrer pour trouver les parkings voulu selon le flux et l'occupation.
 		if (!aggressive) {
 			ArrayList<Parking> filterd = new ArrayList<Parking>();
 			for (Parking parking : shortestPathsToParking) {
-			// Verify if by the time I arrive to the parking is still going to have place
+			// Verifier si l'utilisateur a le temps de se rendre au parking avant qu'il se remplisse. Flux donné par heure et ensuite divisé par 60.
 				if (((parking.flux * parking.minDistance / 60) + parking.occupancy) < parking.capacity) {
 					filterd.add(parking);
 				}
@@ -115,11 +123,11 @@ public class Dijkstra {
 			shortestPathsToParking = filterd;
 		}
 
-		// Find the shortest path
+		// Trouver le parking le plus rapide à se rendre.
 		if (!shortestPathsToParking.isEmpty()) {
 			closestParking = shortestPathsToParking.get(0);
 
-			// Set Getter Variables
+			// Variables Set et Get.
 			this.minDistanceBestPath = closestParking.minDistance;
 			this.OrdererdArrayListBestPath = paths.get(closestParking.id);
 		}
