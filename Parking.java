@@ -21,7 +21,11 @@ public class Parking extends Node {
         this.flux = flux;
 
         if (occupancy<0) {
-            throw new IllegalArgumentException("Occupancy cannot be negative"); // Si le nombre de voitures est négatif, il y a un erreur.
+            throw new IllegalArgumentException("Occupancy cannot be negative"); // Si le nombre de voitures dans le parking est négatif, il y a un erreur.
+        }
+        
+        if (capacity<0) {
+            throw new IllegalArgumentException("Occupancy cannot be negative"); // Si la capacité maximale de voitures est négative, il y a un erreur.
         }
     }
 
