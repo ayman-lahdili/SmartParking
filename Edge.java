@@ -1,4 +1,4 @@
-
+/* Cette classe sert à créer une route du point (Node ou parking) A au point B. Il prend en paramètre to, le point B, la distance de la route et la vitesse de la route. */
 
 public class Edge {
 
