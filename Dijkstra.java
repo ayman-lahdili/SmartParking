@@ -76,7 +76,7 @@ public class Dijkstra {
 			}
 		}
 		
-		// enerer des  chemins pour chaque destination.
+		// Generer des chemins pour chaque destination.
 		for (String id : paths.keySet()) {
 			Node node =  graph.get(id);
 			
@@ -136,12 +136,16 @@ public class Dijkstra {
 
 	/**
 	 * 
-	 * @return 
+	 * @return Le temps pour le meilleur chemin. 0.0 si il ne trouve pas de chemin
 	 */
 	public double getTimeBestPath() {
 		return this.minDistanceBestPath;
 	}
 
+	/**
+	 * 
+	 * @return une ArrayList ordonnée pour montrer le trajet optimal. null s'il n'y a pas de trajet possible vers un stationnement innoccupé.
+	 */
 	public ArrayList<String> getDirectionBestPaths() {
 		return this.OrdererdArrayListBestPath;
 	}

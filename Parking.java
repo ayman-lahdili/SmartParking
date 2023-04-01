@@ -25,7 +25,7 @@ public class Parking extends Node {
         }
         
         if (capacity<0) {
-            throw new IllegalArgumentException("Occupancy cannot be negative"); // Si la capacité maximale de voitures est négative, il y a un erreur.
+            throw new IllegalArgumentException("Capacity cannot be negative"); // Si la capacité maximale de voitures est négative, il y a un erreur.
         }
     }
 
