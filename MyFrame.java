@@ -55,7 +55,7 @@ public class MyFrame extends JFrame implements ActionListener {
 	 * @apiNote Class's Constructor
 	 */
 	public MyFrame() {
-		super("www.parkingAuto.com");
+		super("SmartParking");
 		
 		/*
 		 * Initialisation de nos label et textField pour notre panel1
