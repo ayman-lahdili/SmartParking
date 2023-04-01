@@ -5,9 +5,9 @@ public class Dijkstra {
 
 	protected Node start;
 	protected Map<String, Node> graph = new HashMap<>();
+	protected ArrayList<String> OrderdArrayListBestPath;
 	protected boolean aggressive;
 	protected double minDistanceBestPath;
-	protected ArrayList<String> OrdererdArrayListBestPath;
 
 	/**
 	 * 
@@ -129,7 +129,7 @@ public class Dijkstra {
 
 			// Variables Set et Get.
 			this.minDistanceBestPath = closestParking.minDistance;
-			this.OrdererdArrayListBestPath = paths.get(closestParking.id);
+			this.OrderdArrayListBestPath = paths.get(closestParking.id);
 		}
 
 	}
@@ -147,7 +147,7 @@ public class Dijkstra {
 	 * @return une ArrayList ordonnée pour montrer le trajet optimal. null s'il n'y a pas de trajet possible vers un stationnement innoccupé.
 	 */
 	public ArrayList<String> getDirectionBestPaths() {
-		return this.OrdererdArrayListBestPath;
+		return this.OrderdArrayListBestPath;
 	}
 
 }
