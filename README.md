@@ -20,3 +20,17 @@ The factors considered are:
 - Each parking has a capacity, an occupancy, and a flux. The capacity dictates the number of cars that the parking can hold at maximum. The occupancy is the number of cars presently in the parking, and the flux is the average number of cars that are entering/exiting the parking per minute.
 - The user will choose between a conservative option or an aggressive option. The conservative option takes into consideration the flux of the parking. For example, if a parking has a capacity of 50, an occupancy of 45, and a flux of 2, then within 3 minutes, the parking should be full. The conservative option will thus ignore that parking if it takes more than 3 minutes to reach it, even if it is the parking that will take the least amount of time to reach. However, an aggressive will choose it.
 - Dijkstra's algorithm will then produce an arrayList of the paths available, the *closest* parking, and the shortest path to take to get to it.
+
+**INTERFACE**
+--
+![image](https://github.com/ayman-lahdili/SmartParking/assets/97915928/f06b9f7f-804d-433d-847a-dc381d3a7e9f)
+
+**SAFE**
+--
+<img width="887" alt="image" src="https://github.com/ayman-lahdili/SmartParking/assets/97915928/e20eecb6-3f92-4e8f-92b3-7c3fd6599e30">
+
+**AGGRESSIVE**
+--
+<img width="884" alt="image" src="https://github.com/ayman-lahdili/SmartParking/assets/97915928/b35ee8fa-b86c-42f5-ab81-adfeaeccb42d">
+
+
