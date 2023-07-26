@@ -26,11 +26,7 @@ The factors considered are:
 ![image](https://github.com/ayman-lahdili/SmartParking/assets/97915928/f06b9f7f-804d-433d-847a-dc381d3a7e9f)
 
 **SAFE**
+Here, the algorithm finds that the Parking P2, although the shortest path, is already full, thus it finds the next closest one.
 --
 <img width="887" alt="image" src="https://github.com/ayman-lahdili/SmartParking/assets/97915928/e20eecb6-3f92-4e8f-92b3-7c3fd6599e30">
-
-**AGGRESSIVE**
---
-<img width="884" alt="image" src="https://github.com/ayman-lahdili/SmartParking/assets/97915928/b35ee8fa-b86c-42f5-ab81-adfeaeccb42d">
-
 
